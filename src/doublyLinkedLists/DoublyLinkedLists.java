@@ -1,34 +1,41 @@
-package singlyLinkedList1;
+package doublyLinkedLists;
 
-public class LinkedList {
+public class DoublyLinkedLists {
 
 	private Node head;
+	private Node tail;
 	private int size;
 	
 	public void addToFront(int val) {
 		Node node = new Node(val);
 		node.setNext(head);
+		if(head == null) { // If we are adding to empty list
+			tail = node;
+		}else { // If not to empty list
+			head.setPrevious(node);
+		}
 		head = node;
 		size++;
 	}
 	
-	public void insertAtLast(int val) {
-		Node lastNode = new Node(val);
-		Node current = head;
-		Node storeNext = null;
-		while(current!=null) {
-			storeNext = current;
-			current = current.getNext();
+	public void addToEnd(int val) {
+		Node node = new Node(val);
+		if(tail==null) {
+			head = node;
+		}else {
+			tail.setNext(node);
+			node.setPrevious(tail);
 		}
-		storeNext.setNext(lastNode);
+		tail = node;
 		size++;
 	}
 	
 	public void insertAtMiddle(int n, int val) {
+		Node newNode = new Node(val);
 		if(head == null) {
-			head = new Node(val);
+			head = newNode;
+			tail = newNode;
 		}else {
-			Node newNode = new Node(val);
 			int pos = 1;
 			Node current = head;
 			while(current != null) {
@@ -38,6 +45,7 @@ public class LinkedList {
 				current = current.getNext();
 				pos++;
 			}
+			newNode.setPrevious(current);
 			newNode.setNext(current.getNext());
 			current.setNext(newNode);
 			size++;
@@ -50,25 +58,21 @@ public class LinkedList {
 		}
 		Node removeNode = head;
 		head = head.getNext();
+		head.setPrevious(null);
 		size--;
 		removeNode.setNext(null);
 		return removeNode;
-		
 	}
 	
-	/*
-	 * public Node removeFromAnyPosition(int n) { int i=0; if(isEmpty()) { return
-	 * null; } Node current = head; while(current != null) { if(i==n) { break; }
-	 * current = current.getNext(); i++; }
-	 */
-		
-		
-		Node removeNode = head;
-		head = head.getNext();
-		size--;
-		removeNode.setNext(null);
-		return removeNode;
-		
+	public Node removeFromLast() {
+		if(isEmpty()) {
+			return null;
+		}
+		Node removeLastNode = tail;
+		tail = tail.getPrevious();
+		tail.setNext(null);
+		removeLastNode.setPrevious(null);
+		return removeLastNode;
 	}
 	
 	public void printList() {
@@ -76,7 +80,7 @@ public class LinkedList {
 		System.out.print("Head -> ");
 		while(current!=null) {
 			System.out.print(current);
-			System.out.print(" -> ");
+			System.out.print(" <=> ");
 			current = current.getNext();
 		}
 		System.out.print("null");
